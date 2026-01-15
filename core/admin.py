@@ -4,9 +4,7 @@ https://unfoldadmin.com/docs/
 """
 
 from django.contrib.admin import AdminSite
-from unfold.admin import UnfoldModelAdmin
-from unfold.decorators import display, action
-from django.utils.html import format_html
+from unfold.admin import ModelAdmin
 
 
 class UnfoldAdminSite(AdminSite):
@@ -35,7 +33,7 @@ class UnfoldAdminSite(AdminSite):
 unfold_admin_site = UnfoldAdminSite()
 
 
-class UnfoldBaseAdmin(UnfoldModelAdmin):
+class UnfoldBaseAdmin(ModelAdmin):
     """Base admin class for all models with common Unfold settings"""
 
     def get_readonly_fields(self, request, obj=None):

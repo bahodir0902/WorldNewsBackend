@@ -15,10 +15,10 @@ class AdminLogger:
     """Structured logging for admin operations"""
 
     COLORS = {
-        'CREATED': '✨',
-        'UPDATED': '📝',
-        'DELETED': '🗑️',
-        'ACTION': '⚡',
+        'CREATED': '[CREATED]',
+        'UPDATED': '[UPDATED]',
+        'DELETED': '[DELETED]',
+        'ACTION': '[ACTION]',
     }
 
     @staticmethod
@@ -43,7 +43,7 @@ class AdminLogger:
         """
 
         timestamp = timezone.now().strftime('%Y-%m-%d %H:%M:%S')
-        emoji = AdminLogger.COLORS.get(action, '📌')
+        emoji = AdminLogger.COLORS.get(action, '[ACTION]')
         user_display = f"{user.first_name} {user.last_name}" if user.first_name else user.username
 
         # Build the log message
@@ -51,30 +51,30 @@ class AdminLogger:
             f"\n{'='*80}",
             f"{emoji} {action.upper()} | {model_name}",
             f"{'='*80}",
-            f"⏰ Timestamp: {timestamp}",
-            f"👤 User: {user_display} ({user.email})",
-            f"🆔 ID: {instance.pk}",
+            f"Timestamp: {timestamp}",
+            f"User: {user_display} ({user.email})",
+            f"ID: {instance.pk}",
         ]
 
         # Add instance representation
         if hasattr(instance, 'title'):
-            log_lines.append(f"📌 Title: {instance.title}")
+            log_lines.append(f"Title: {instance.title}")
         elif hasattr(instance, 'name'):
-            log_lines.append(f"📌 Name: {instance.name}")
+            log_lines.append(f"Name: {instance.name}")
 
         if hasattr(instance, 'slug'):
-            log_lines.append(f"🔗 Slug: {instance.slug}")
+            log_lines.append(f"Slug: {instance.slug}")
 
         if hasattr(instance, 'status'):
-            log_lines.append(f"📊 Status: {instance.status}")
+            log_lines.append(f"Status: {instance.status}")
 
         if hasattr(instance, 'published_at'):
             pub_at = instance.published_at
-            log_lines.append(f"📅 Published: {pub_at.strftime('%Y-%m-%d %H:%M:%S') if pub_at else 'Not published'}")
+            log_lines.append(f"Published: {pub_at.strftime('%Y-%m-%d %H:%M:%S') if pub_at else 'Not published'}")
 
         # Add changes if provided
         if changes and action == 'UPDATED':
-            log_lines.append(f"\n📋 Changes:")
+            log_lines.append(f"\nChanges:")
             for field, (old_value, new_value) in changes.items():
                 log_lines.append(f"  • {field}:")
                 log_lines.append(f"      Old: {AdminLogger._format_value(old_value)}")
@@ -82,7 +82,7 @@ class AdminLogger:
 
         # Add extra info
         if extra_info:
-            log_lines.append(f"\n📝 Info: {extra_info}")
+            log_lines.append(f"\nInfo: {extra_info}")
 
         log_lines.append(f"{'='*80}\n")
 
@@ -97,7 +97,7 @@ class AdminLogger:
         if value is None:
             return "None"
         elif isinstance(value, bool):
-            return "✓ Yes" if value else "✗ No"
+            return "Yes" if value else "No"
         elif isinstance(value, (list, tuple)):
             return f"[{len(value)} items]"
         elif isinstance(value, dict):
@@ -118,20 +118,20 @@ class AdminLogger:
         """Log bulk operations like delete/status change"""
 
         timestamp = timezone.now().strftime('%Y-%m-%d %H:%M:%S')
-        emoji = AdminLogger.COLORS.get(action, '📌')
+        emoji = AdminLogger.COLORS.get(action, '[ACTION]')
         user_display = f"{user.first_name} {user.last_name}" if user.first_name else user.username
 
         log_lines = [
             f"\n{'='*80}",
             f"{emoji} BULK {action.upper()} | {model_name}",
             f"{'='*80}",
-            f"⏰ Timestamp: {timestamp}",
-            f"👤 User: {user_display} ({user.email})",
-            f"📊 Items Affected: {count}",
+            f"Timestamp: {timestamp}",
+            f"User: {user_display} ({user.email})",
+            f"Items Affected: {count}",
         ]
 
         if query_description:
-            log_lines.append(f"🔍 Query: {query_description}")
+            log_lines.append(f"Query: {query_description}")
 
         log_lines.append(f"{'='*80}\n")
 

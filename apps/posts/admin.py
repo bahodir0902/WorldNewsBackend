@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 from unfold.admin import ModelAdmin
 from unfold.decorators import display
 
@@ -267,7 +268,7 @@ class PostAdmin(ModelAdmin):
         """Display published date"""
         if obj.published_at:
             return obj.published_at.strftime('%b %d, %Y')
-        return format_html('<span style="color: #9CA3AF;">Not published</span>')
+        return mark_safe('<span style="color: #9CA3AF;">Not published</span>')
 
     @display(
         description='Actions',
@@ -336,4 +337,3 @@ class PostAdmin(ModelAdmin):
 
 admin.site.register(PostCategory, PostCategoryAdmin)
 admin.site.register(Post, PostAdmin)
-
