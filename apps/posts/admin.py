@@ -187,7 +187,7 @@ class PostAdmin(ModelAdmin):
                 obj.image.url
             )
         else:
-            image_tag = format_html(
+            image_tag = mark_safe(
                 '<div style="width: 40px; height: 40px; border-radius: 4px; '
                 'margin-right: 8px; background-color: #E5E7EB; '
                 'display: flex; align-items: center; justify-content: center; '
@@ -207,9 +207,7 @@ class PostAdmin(ModelAdmin):
     def category_badge(self, obj):
         """Display category as colored badge"""
         if not obj.category:
-            return format_html(
-                '<span style="color: #6B7280;">Uncategorized</span>'
-            )
+            return mark_safe('<span style="color: #6B7280;">Uncategorized</span>')
 
         colors = {
             'news': '#3B82F6',
