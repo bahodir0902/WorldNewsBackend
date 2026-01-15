@@ -1,6 +1,4 @@
-from django.shortcuts import render
-
-from django.db.models import Q
+from django.db.models import Q, F
 from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
