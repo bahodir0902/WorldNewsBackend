@@ -138,24 +138,33 @@ class PostAdmin(ModelAdmin):
         'views_count',
     ]
 
-    search_fields = ['title', 'short_description', 'content', 'slug']
-    prepopulated_fields = {'slug': ('title',)}
+    search_fields = ['title_uz', 'title_ru', 'title_en', 'short_description_uz', 'short_description_ru', 'short_description_en', 'content_uz', 'content_ru', 'content_en', 'slug']
+    prepopulated_fields = {'slug': ('title_uz',)}
     date_hierarchy = 'published_at'
     ordering = ['-published_at', '-created_at']
 
     fieldsets = (
-        ('📝 Content Information', {
-            'fields': ('title', 'slug', 'category', 'type_tag'),
-            'description': 'Main post details and categorization',
+        ('📝 Content - Uzbek (Main)', {
+            'fields': ('title_uz', 'slug', 'short_description_uz', 'content_uz'),
+            'description': 'Uzbek language content (primary)',
         }),
-        ('📄 Content', {
-            'fields': ('short_description', 'content'),
-            'classes': ('wide',),
-            'description': 'Post description and full content',
+        ('🇷🇺 Content - Russian', {
+            'fields': ('title_ru', 'short_description_ru', 'content_ru'),
+            'classes': ('collapse',),
+            'description': 'Russian language content (optional)',
+        }),
+        ('🇬🇧 Content - English', {
+            'fields': ('title_en', 'short_description_en', 'content_en'),
+            'classes': ('collapse',),
+            'description': 'English language content (optional)',
+        }),
+        ('📌 Categorization', {
+            'fields': ('category', 'type_tag'),
+            'description': 'Category and tags',
         }),
         ('🖼️ Media', {
-            'fields': ('image', 'video_url'),
-            'description': 'Images and video content',
+            'fields': ('image', 'video_url', 'video_file'),
+            'description': 'Images and video content (use either video URL or video file, not both)',
         }),
         ('📊 Publishing', {
             'fields': ('status', 'published_at'),
@@ -171,12 +180,12 @@ class PostAdmin(ModelAdmin):
     readonly_fields = ['views_count', 'created_at', 'updated_at',]
 
     def get_prepopulated_fields(self, request, obj=None):
-        """Auto-fill slug from title"""
-        return {'slug': ('title',)} if not obj else {}
+        """Auto-fill slug from Uzbek title"""
+        return {'slug': ('title_uz',)} if not obj else {}
 
     @display(
         description='Title',
-        ordering='title',
+        ordering='title_uz',
     )
     def title_preview(self, obj):
         """Display title with preview"""
@@ -194,10 +203,11 @@ class PostAdmin(ModelAdmin):
                 'font-size: 20px;">📄</div>'
             )
 
+        title = obj.title_uz or obj.title_ru or obj.title_en or "Untitled"
         return format_html(
             '{}{}',
             image_tag,
-            obj.title[:60] + '...' if len(obj.title) > 60 else obj.title
+            title[:60] + '...' if len(title) > 60 else title
         )
 
     @display(

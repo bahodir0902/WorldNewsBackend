@@ -146,7 +146,7 @@ class PostViewSet(viewsets.ReadOnlyModelViewSet):
 
     @action(detail=False, methods=['get'], url_path='search')
     def search(self, request):
-        """Search posts by title or description"""
+        """Search posts by title or description in all languages"""
         query = request.query_params.get('q', '')
 
         if not query:
@@ -155,10 +155,17 @@ class PostViewSet(viewsets.ReadOnlyModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
+        # Search across all language fields
         queryset = self.get_queryset().filter(
-            Q(title__icontains=query) |
-            Q(short_description__icontains=query) |
-            Q(content__icontains=query)
+            Q(title_uz__icontains=query) |
+            Q(title_ru__icontains=query) |
+            Q(title_en__icontains=query) |
+            Q(short_description_uz__icontains=query) |
+            Q(short_description_ru__icontains=query) |
+            Q(short_description_en__icontains=query) |
+            Q(content_uz__icontains=query) |
+            Q(content_ru__icontains=query) |
+            Q(content_en__icontains=query)
         )
 
         page = self.paginate_queryset(queryset)

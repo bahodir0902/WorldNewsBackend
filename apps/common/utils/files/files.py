@@ -15,3 +15,11 @@ def unique_file_path(instance, filename):
     unique_filename = f"{int(time.time())}_{uuid.uuid4().hex}.{ext}"
     folder = f"{instance.__class__.__name__.lower()}_files"
     return os.path.join(folder, unique_filename)
+
+
+def unique_video_path(instance, filename):
+    """Generate unique path for uploaded videos"""
+    ext = filename.split(".")[-1]  # Get file extension
+    unique_filename = f"{int(time.time())}_{uuid.uuid4().hex}.{ext}"
+    folder = f"{instance.__class__.__name__.lower()}_videos"
+    return os.path.join(folder, unique_filename)
